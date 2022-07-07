@@ -1,7 +1,7 @@
 // define variables
 var game;
 var player;
-var platforms;
+var platform;
 var badges;
 var items;
 var cursors;
@@ -10,19 +10,34 @@ var text;
 var winningMessage;
 var won = false;
 var currentScore = 0;
-var winningScore = 10;
+var winningScore = 40;
 
 // add collectable items to the game
 function addItems() {
   items = game.add.physicsGroup();
-  createItem(375, 300, "coin");
+  (475, 330, "coin");
+}
+function addItems() {
+  items = game.add.physicsGroup();
+  createItem(405, 300, "coin");
+  createItem(475, 250, "coin");
+  createItem(300, 350, "coin");
+  createItem(150, 400, "coin");
+  createItem(700, 50, "star");
+  createItem(580, 250, "poison");
+  createItem(225, 350, "poison");
 }
 
 // add platforms to the game
 function addPlatforms() {
   platforms = game.add.physicsGroup();
-  platforms.create(450, 150, "platform");
-  platforms.setAll("body.immovable", true);
+  platforms.create(450, 300, "platform2");
+  platforms.create(100, 450, "platform2");
+  platforms.create(350, 350, "platform");
+  platforms.create(200, 400, "platform");
+  platforms.create(0, 550, "platform3");
+  platforms.create(500, 550, "platform3");
+  platforms.setAll ("body.immovable", true);
 }
 
 // create a single animated item and add to screen
@@ -43,11 +58,27 @@ function createBadge() {
 // when the player collects an item on the screen
 function itemHandler(player, item) {
   item.kill();
-  currentScore = currentScore + 10;
-  if (currentScore === winningScore) {
-    createBadge();
+  console.log(item.key);
+  
+  if(item.key == "coin"){
+    currentScore = currentScore + 10;
   }
+  
+  if(item.key == "poison"){
+    currentScore = currentScore - 25;
+  }
+  
+  if(item.key == "star"){
+    currentScore = currentScore + 25;
+  }
+  
 }
+
+if (currentScore === winningScore) {
+  createBadge();
+} 
+
+
 
 // when the player collects the badge at the end of the game
 function badgeHandler(player, badge) {
@@ -66,20 +97,25 @@ window.onload = function () {
 
   // before the game begins
   function preload() {
-    game.stage.backgroundColor = "#5db1ad";
+    game.stage.backgroundColor = "#00B3FF";
 
     //Load images
     game.load.image("platform", "assets/platform_1.png");
+    game.load.image("platform2", "assets/platform_2.png");
+    game.load.image("platform3", "assets/mario brick.png");
+    game.load.image("platform3", "assets/mario brick.png");
 
     //Load spritesheets
     game.load.spritesheet("player", "assets/chalkers.png", 48, 62);
     game.load.spritesheet("coin", "assets/coin.png", 36, 44);
     game.load.spritesheet("badge", "assets/badge.png", 42, 54);
+    game.load.spritesheet("poison", "assets/poison.png", 32, 32);
+    game.load.spritesheet("star", "assets/star.png", 32, 32);
   }
 
   // initial game set up
   function create() {
-    player = game.add.sprite(50, 600, "player");
+    player = game.add.sprite(50, 550, "player");
     player.animations.add("walk");
     player.anchor.setTo(0.5, 1);
     game.physics.arcade.enable(player);
@@ -87,7 +123,10 @@ window.onload = function () {
     player.body.gravity.y = 500;
 
     addItems();
-    addPlatforms();
+    addPlatforms()
+    platforms.create(300, 600, "platform");
+    platforms.create(400, 600, "platform2");
+    ;
 
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -138,6 +177,6 @@ window.onload = function () {
       winningMessage.text = "YOU WIN!!!";
     }
   }
-
+  
   function render() {}
 };
